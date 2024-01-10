@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -50,8 +50,10 @@
 
 <body>
     <?php
+    // Define a função para gerar senhas aleatórias
     function gerar_senha($tamanho, $letras_maiusculas = true, $letras_minusculas = true, $numeros = true, $caracteres_especiais = true)
     {
+        // Define os caracteres possíveis que podem ser usados na senha
         $caracteres = '';
         if ($letras_maiusculas) {
             $caracteres .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -66,15 +68,20 @@
             $caracteres .= '!@#$%^&*()_-=+;:,.?';
         }
 
+        // Gera a senha aleatória com base nos caracteres possíveis
         $senha = '';
         for ($i = 0; $i < $tamanho; $i++) {
+            // Usei o random_int() para gerar números aleatórios mais seguros
             $senha .= $caracteres[random_int(0, strlen($caracteres) - 1)];
         }
 
         return $senha;
     }
 
+    // Processa o formulário quando é enviado
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+        // Obtém os dados do formulário e valida o tamanho da senha
         $tamanho = filter_input(INPUT_POST, 'tamanho', FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 50)));
         if (!$tamanho) {
             $mensagem_erro = 'Tamanho da senha inválido';
@@ -84,13 +91,16 @@
             $numeros = isset($_POST["numeros"]);
             $caracteres_especiais = isset($_POST["caracteres_especiais"]);
 
+            // Gera a senha com as opções selecionadas
             $senha = gerar_senha($tamanho, $letras_maiusculas, $letras_minusculas, $numeros, $caracteres_especiais);
 
+            // Mostra a senha ao usuário
             echo '<div class="alert alert-success" role="alert">Sua senha é: ' . htmlspecialchars($senha) . '</div>';
         }
     }
     ?>
 
+    <!-- O formulário permite ao usuário definir as especificações para gerar uma senha segura -->
     <div class="container">
         <form method="post">
             <label class="form-label">Tamanho da senha:</label>
